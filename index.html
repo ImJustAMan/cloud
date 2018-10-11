@@ -10,60 +10,54 @@
 <body>
 
 <div class="box">
-    <header class="clear">
-        <div class="l_header fl">
-            <img src="images/logo.png">
-            <span>妙味云盘</span>
-        </div>
-        <div class="r_header fr">
-            <span class="icon"></span>
-            <i class="fa fa-chevron-down"></i>
-            <span class="shu"></span>
-            <i class="fa fa-gear"></i>
-        </div>
-    </header>
-    <nav class="tools">
-        <div class="fl flex-r">
-            <div>
-                <i class="fa fa-cloud-download"></i>
-                <span>下载</span>
+    <div id="head">
+        <header class="clear">
+            <div class="l_header fl">
+                <img src="images/logo.png">
+                <span>我的云盘</span>
             </div>
-            <div>
-                <i class="fa fa-share-alt"></i>
-                <span>分享</span>
-            </div>
-            <div>
-                <i class="fa fa-arrows"></i>
-                <span>移动到</span>
-            </div>
-            <div>
-                <i class="fa fa-file-excel-o"></i>
-                <span>重命名</span>
-            </div>
-            <div>
-                <i class="fa fa-trash-o"></i>
-                <span>删除</span>
-            </div>
-            <div>
-                <i class="fa fa-folder-open-o"></i>
-                <span>新建文件夹</span>
-            </div>
-            <div>
-                <i class="fa fa-refresh"></i>
-            </div>
-        </div>
-        <div class="fr">
-            <div>
-                <i class="sort"></i>
+            <div class="r_header fr">
+                <span class="icon"></span>
                 <i class="fa fa-chevron-down"></i>
+                <span class="shu"></span>
+                <i class="fa fa-gear"></i>
             </div>
-            <div>
-                <i class="icon"></i>
+        </header>
+        <nav class="tools">
+            <div class="fl flex-r">
+                <div>
+                    <i class="fa fa-arrows"></i>
+                    <span>移动到</span>
+                </div>
+                <div>
+                    <i class="fa fa-file-excel-o"></i>
+                    <span>重命名</span>
+                </div>
+                <div>
+                    <i class="fa fa-trash-o"></i>
+                    <span>删除</span>
+                </div>
+                <div>
+                    <i class="fa fa-folder-open-o"></i>
+                    <span>新建文件夹</span>
+                </div>
+                <div>
+                    <i class="fa fa-refresh"></i>
+                </div>
             </div>
-        </div>
-    </nav>
-    <div class="body clear">
-        <div class="left fl">
+            <div class="fr">
+                <div>
+                    <i class="sort"></i>
+                    <i class="fa fa-chevron-down"></i>
+                </div>
+                <div>
+                    <i class="icon"></i>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="body">
+        <div class="left">
             <!--<ul>
                 <li class="close">
                     <span class="f_arrow"></span>
@@ -72,7 +66,7 @@
                 </li>
             </ul>-->
         </div>
-        <div class="right fl">
+        <div class="right">
             <div class="top clear">
                 <div class="checkAll"></div>
                 <nav class="nav_bar fl">
@@ -82,255 +76,985 @@
                     <span class="c_nav">JS课程</span>-->
                 </nav>
             </div>
-            <div class="bottom clear">
+            <div class="bottom clear" onselectstart="return false;">
                <!-- <div class="file">
                     <i class="check"></i>
                     <div class="folder"></div>
                     <span class="f_name">JS基础课程</span>
                 </div>-->
             </div>
+            <!--<div class="bottom clear" onselectstart="return false;">-->
+                <!--&lt;!&ndash; <div class="file">-->
+                     <!--<i class="check"></i>-->
+                     <!--<div class="folder"></div>-->
+                     <!--<span class="f_name">JS基础课程</span>-->
+                 <!--</div>&ndash;&gt;-->
+            <!--</div>-->
             <div class="empty">
                 <img src="images/cover-bg.png" height="241" width="290">
             </div>
         </div>
     </div>
 </div>
+<div class="tan">
+    <div class="window">
+        <div class="head">
+            <span class="fl">移动到...</span>
+            <span class="fr">&#10006</span>
+        </div>
+        <div class="content">
+            <div class="show"></div>
+            <div class="btns">
+                <div class="sureBtn">确定</div>
+                <div class="cancelBtn">取消</div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
+<div class="f_menu">
+    <div>重命名</div>
+    <div class="heng"></div>
+    <div>删除</div>
+</div>
 
 
 <script src="data/data.js"></script>
 
 
 <script>
-    let m_view = document.querySelector('.left');
-    let n_view = document.querySelector('.nav_bar');
-	let f_view = document.querySelector('.bottom');
-	let f_empty = document.querySelector('.empty');
-	let download = document.querySelector('.tools .flex-r div:nth-of-type(1)');
-	let share = document.querySelector('.tools .flex-r div:nth-of-type(2)');
-	let move = document.querySelector('.tools .flex-r div:nth-of-type(3)');
-	let rename = document.querySelector('.tools .flex-r div:nth-of-type(4)');
-	let remove = document.querySelector('.tools .flex-r div:nth-of-type(5)');
-	let newfolder = document.querySelector('.tools .flex-r div:nth-of-type(6)');
+    (function () {
 
+		var section = document.querySelector('.body');
+		var head = document.querySelector('#head');
+		function resize(){
+			var clientH = document.documentElement.clientHeight;
+			section.style.height = clientH - head.offsetHeight+'px';
+		}
+		window.onresize = resize;
+		resize();
 
+        if (!localStorage.getItem('off')) {
+            localStorage.setItem('localData',JSON.stringify(data));
+            localStorage.setItem('off',1);
+        }
 
+        let localData = JSON.parse(localStorage.getItem('localData'));
 
+		let m_view = document.querySelector('.left');
+		let n_view = document.querySelector('.nav_bar');
+		let f_view = document.querySelector('.bottom');
+		let f_empty = document.querySelector('.empty');
+		let f_menu = document.querySelector('.f_menu');
+		let move = document.querySelector('.tools .flex-r div:nth-of-type(1)');
+		let rename = document.querySelector('.tools .flex-r div:nth-of-type(2)');
+		let remove = document.querySelector('.tools .flex-r div:nth-of-type(3)');
+		let newfolder = document.querySelector('.tools .flex-r div:nth-of-type(4)');
+		let checkAll = document.querySelector('.checkAll');
+		let show = document.querySelector('.show');
+		let popUp = document.querySelector('.window');
+		let cancelBtn = document.querySelector('.cancelBtn');
+		let closeBtn = document.querySelector('.window span.fr');
+		let sureBtn = document.querySelector('.sureBtn');
+		let tan = document.querySelector('.tan');
 
 //---------------------------------数据-----------------------------------
 
 
-    let topId = 0;
-    let topPid = -1;
-    let nowId = 0;
+		let topId = 0;
+		let topPid = -1;
+		let nowId = 0;
+		let arr1 = '';
+		let n = 0;
+		let m = 0;
 
-    function getChild(id) {
-        let child = data.files.filter(function (item) {
-            return item.pid == id;
-		})
-        return child;
-	}
+		//这是找到子数据（一级子数据）
+		function getChild(id) {
+			let child = localData.files.filter(function (item) {
+				return item.pid == id;
+			})
+			return child;
+		}
 
-    function getSelf(id) {
-		let self = data.files.filter(function (item) {
-			return item.id == id;
-		})
-		return self;
-	}
+		//这是找到自身数据
+		function getSelf(id) {
+			let self = localData.files.filter(function (item) {
+				return item.id == id;
+			})
+			return self;
+		}
 
+		//这是找到父级数据（所有父级祖级等）
+		function getParent(id) {
+			let self = getSelf(getSelf(id)[0].pid)[0];
+			let parent = [];
 
+			while(self){
+				parent.push(self);
+				self = getSelf(self.pid)[0];
+			}
 
-	function getParent(id) {
-    	let self = getSelf(getSelf(id)[0].pid)[0];
-    	let parent = [];
+			return parent.reverse();
+		}
 
-		while(self){
-			parent.push(self);
-			self = getSelf(self.pid)[0];
-        }
+		//这是左侧菜单对应打开功能
+		function openList(id) {
+			let arr1 = getParent(id).map(function (item) {
+				return item.id;
+			});
+			arr1.push(getSelf(id)[0].id);
+			let divAll = document.querySelectorAll('.left div');
+			divAll.forEach(function (item) {
+				for (var i = 0; i < arr1.length; i++) {
+					if (item.dataset.id == arr1[i]) {
+						item.classList.remove('close');
+						item.classList.add('open');
+						for (var a = 0; a < divAll.length; a++) {
+							divAll[a].classList.remove('active');
+						}
+						item.classList.add('active');
+						item.parentElement.parentElement.style.display = 'block';
+						Array.from(item.parentElement.children).forEach(function (child) {
+							child.style.display = 'block';
+						})
+					}
+				}
+			})
+		}
 
-        return parent.reverse();
-	}
-
+		//这是从相应数组删除对应id数据的功能（id为一个数组）
+		function removeObject(arr,id) {
+			arr1 = arr.filter(function (item) {
+				return item.id != id[n];
+			});
+			n++;
+			if (id[n]) {
+				removeObject(arr1,id);
+			}else {
+				n = 0;
+				return arr1;
+			}
+		}
 
 //----------------------------------生成---------------------------------
 
 
-    function createList(child) {
-        let l_str = '';
-        if (child.length > 0) {
-			child.forEach(function (item,index) {
-				l_str += `
-                <ul>
-                    <li class="close" data-id = "${item.id}">
-                        <span class="f_arrow"></span>
-                        <span class="s_folder"></span>
-                        <span class="text">${item.title}</span>
-                    </li>
-                    ${createList(getChild(item.id))}
-                </ul>
-            `;
-			})
-        }
-        return m_view.innerHTML = l_str;
-	}
 
-	createList(getSelf(topId));
+		//这是创建列表
+		function createList(child,index) {
+			let l_str = '';
+			if (child.length > 0) {
+				child.forEach(function (item) {
+					if (getChild(item.id).length > 0) {
+						l_str += `
+                        <ul>
+                            <li>
+                                <div class="close" data-id = "${item.id}" style="padding: 8px 0 8px ${index * 20}px;" data-w = 'ok'>
+                                    <span class="f_arrow"></span>
+                                    <span class="s_folder"></span>
+                                    <span class="text">${item.title}</span>
+                                </div>
+                                ${createList(getChild(item.id),index+1)}
+                            </li>
+                        </ul>
+                    `;
+					}else {
+						l_str += `
+                        <ul>
+                            <li>
+                                <div class="close" data-id = "${item.id}" style="padding: 8px 0 8px ${index * 20}px;" data-w = 'ok'>
+                                    <span class="s_folder" style="margin-left: 18px;"></span>
+                                    <span class="text">${item.title}</span>
+                                </div>
+                            </li>
+                        </ul>
+                    `;
+					}
+				})
+			}
+			return m_view.innerHTML = l_str;
+		}
 
+		createList(getSelf(topId),1);
 
-    function createNav(id) {
-        let n_str = '';
-        getParent(id).forEach(function (item) {
-            n_str += `
+		//这是创建导航条
+		function createNav(id) {
+			let n_str = '';
+			getParent(id).forEach(function (item) {
+				n_str += `
                 <a href="javascript:;" class="p_nav" data-id = "${item.id}">${item.title}</a>
             `;
-		});
-        n_str += `
+			});
+			n_str += `
             <span class="c_nav"data-id = "${id}">${getSelf(id)[0].title}</span>
         `;
-        n_view.innerHTML = n_str;
-	}
+			n_view.innerHTML = n_str;
+		}
 
+		createNav(topId);
 
-	createNav(topId);
-
-
-    function createFolder(child) {
-        let f_str = '';
-        if (child.length > 0) {
-			child.forEach(function (item) {
-				f_str += `
+		//这是创建文件夹
+		function createFolder(child) {
+			let f_str = '';
+			if (child.length > 0) {
+				child.forEach(function (item) {
+					f_str += `
             <div class="file" data-id = "${item.id}">
                 <i class="check"></i>
                 <div class="folder"></div>
                 <span class="f_name">${item.title}</span>
+                <input type="text" class="f_input">
             </div>
         `;
-            f_view.style.display = 'block';
-            f_empty.style.display = 'none';
-			})
-        }else {
-        	f_view.style.display = 'none';
-			return f_empty.style.display = 'block';
-        }
-		f_view.innerHTML = f_str;
-	}
+					f_view.style.display = 'block';
+					f_empty.style.display = 'none';
+				})
+			}else {
+				f_view.style.display = 'none';
+				return f_empty.style.display = 'block';
+			}
+			f_view.innerHTML = f_str;
+		}
 
-	createFolder(getChild(topId))
+		createFolder(getChild(topId));
+		openList([topId]);
+
+        //弹窗中的菜单
+		function createListSmall(son,num) {
+			let sl_str = '';
+			if (son.length > 0) {
+				son.forEach(function (item) {
+					if (getChild(item.id).length > 0) {
+						sl_str += `
+                        <ul>
+                            <li>
+                                <div class="kai" data-id = "${item.id}" style="padding: 8px 0 8px ${num * 20}px;" data-w = 'ok'>
+                                    <span class="f_arrow"></span>
+                                    <span class="s_folder"></span>
+                                    <span class="text">${item.title}</span>
+                                </div>
+                                ${createListSmall(getChild(item.id),num+1)}
+                            </li>
+                        </ul>
+                    `;
+					}else {
+						sl_str += `
+                        <ul>
+                            <li>
+                                <div class="kai" data-id = "${item.id}" style="padding: 8px 0 8px ${num * 20}px;" data-w = 'ok'>
+                                    <span class="s_folder" style="margin-left: 18px;"></span>
+                                    <span class="text">${item.title}</span>
+                                </div>
+                            </li>
+                        </ul>
+                    `;
+					}
+				})
+			}
+			return show.innerHTML = sl_str;
+		}
+
+		createListSmall(getSelf(topId),1);
+
+		//这是自定义滚动条
+		function scroll() {
+			let navBar = document.createElement('div');
+			navBar.classList.add('navBar');
+			let navScroll = document.createElement('div');
+			navScroll.classList.add('navScroll');
+			navBar.appendChild(navScroll);
+			show.appendChild(navBar);
+		}
+
+		scroll();
 
 //-------------------------------事件-------------------------------------
 
-    m_view.addEventListener('click',function (e) {
-    	let b_click = '';
-        if (e.target.tagName == 'LI') {
-			b_click = e.target;
-        }else if (e.target.tagName == 'SPAN') {
-			b_click = e.target.parentNode;
-        }
-        if (b_click.dataset) {
-			let id = b_click.dataset.id;
-			createNav(id);
-			createFolder(getChild(id));
-			if (b_click.classList.contains('open')) {
-				let parent = b_click.parentNode;
-				let children = parent.children;
-				let ul = parent.querySelectorAll('ul');
-				let li = parent.querySelectorAll('li');
-				for (var i = 1; i < children.length; i++) {
-					children[i].style.display = 'none';
-					for (var a = 0; a < ul.length; a++) {
-						ul[a].style.display = 'none';
-					}
-					for (var b = 0; b < ul.length; b++) {
-						li[b].classList.remove('open');
-						li[b].classList.add('close');
+		//这是左侧菜单相关功能
+		m_view.addEventListener('click',function (e) {
+			checkAll.classList.remove('active');
+			let b_click = '';
+			let divAll = document.querySelectorAll('.left div');
+			if (e.target.dataset.w == 'ok') {
+				b_click = e.target;
+			}else if (e.target.tagName == 'SPAN') {
+				b_click = e.target.parentNode;
+			}else if (e.target.tagName == 'LI') {
+				b_click = e.target.firstElementChild;
+			}
+			if (b_click.dataset) {
+				let id = b_click.dataset.id;
+				createNav(id);
+				createFolder(getChild(id));
+				if (getChild(id).length > 0) {
+					if (b_click.classList.contains('open')) {
+						let parent = b_click.parentNode;
+						let children = parent.children;
+						let ul = parent.querySelectorAll('ul');
+						let div = parent.querySelectorAll('div');
+						for (var d = 0; d < ul.length; d++) {
+							ul[d].style.display = 'none';
+						}
+						for (var k = 0; k < div.length; k++) {
+							div[k].classList.add('close');
+							div[k].classList.remove('open');
+						}
+					}else if (b_click.classList.contains('close')) {
+						b_click.classList.remove('close');
+						b_click.classList.add('open');
+						let parent = b_click.parentNode;
+						let children = parent.children;
+						for (var i = 1; i < children.length; i++) {
+							children[i].style.display = 'block';
+						}
 					}
 				}
-			}else if (b_click.classList.contains('close')) {
-				b_click.classList.remove('close');
-				b_click.classList.add('open');
-				let parent = b_click.parentNode;
-				let children = parent.children;
-				for (var i = 1; i < children.length; i++) {
-					children[i].style.display = 'block';
+				for (var a = 0; a < divAll.length; a++) {
+					divAll[a].classList.remove('active');
+				}
+				b_click.classList.add('active');
+			}
+		});
+
+		//这是导航条相关功能
+		n_view.addEventListener('click',function (e) {
+			let b_click = '';
+			let now = document.querySelector('.c_nav');
+			if (e.target.tagName == 'A') {
+				b_click = e.target;
+			}
+			if (b_click.dataset) {
+				let id = b_click.dataset.id;
+				createNav(id);
+				createFolder(getChild(id));
+				openList(b_click.dataset.id);
+			}
+		});
+
+		//这是打开文件夹功能
+		f_view.addEventListener('dblclick',function (e) {
+			let b_click = '';
+			let now = document.querySelector('.c_nav');
+			if (e.target.classList.contains('file')) {
+				b_click = e.target;
+			}else if (e.target.className == 'folder') {
+				b_click = e.target.parentNode;
+			}else if (e.target.tagName == 'I') {
+				b_click = e.target.parentNode;
+			}
+			if (b_click) {
+				let id = b_click.dataset.id;
+				createNav(id);
+				createFolder(getChild(id));
+				openList(b_click.dataset.id);
+				checkAll.classList.remove('active')
+			}
+		});
+
+		//这是文件夹的选中功能
+		f_view.addEventListener('click',function (e) {
+			let b_click = '';
+			if (e.target.classList.contains('file')) {
+				b_click = e.target;
+			}else if (e.target.className == 'folder') {
+				b_click = e.target.parentNode;
+			}else if (e.target.tagName == 'I') {
+				b_click = e.target.parentNode;
+			}
+			if (b_click.dataset) {
+				b_click.classList.toggle('active');
+				let files = document.querySelectorAll('.file');
+				for (var i = 0; i < files.length; i++) {
+					if (!files[i].classList.contains('active')) {
+						checkAll.classList.remove('active');
+						return false;
+					}else {
+						checkAll.classList.add('active')
+					}
 				}
 			}
-        }
-	});
+		});
 
+		//这是重命名功能
+		f_view.addEventListener('click',function (e) {
+			var b_click = '';
+			if (e.target.className == 'f_name') {
+				b_click = e.target;
+				b_click.style.display = 'none';
+				b_click.parentNode.lastElementChild.style.display = 'block';
+				b_click.parentNode.lastElementChild.value = b_click.innerHTML;
+				b_click.parentNode.lastElementChild.select();
+				b_click.parentNode.lastElementChild.onblur = function () {
+					b_click.style.display = 'block';
+					b_click.parentNode.lastElementChild.style.display = 'none';
+					if (b_click.innerHTML != b_click.parentNode.lastElementChild.value) {
+						if (!b_click.parentNode.lastElementChild.value) {
+							return ;
+                        }else {
+							b_click.innerHTML = b_click.parentNode.lastElementChild.value;
+							let clickId = b_click.parentNode.dataset.id;
+							let now = document.querySelector('.c_nav');
+							arr1 = localData.files.map(function (item) {
+								if (item.id == clickId) {
+									return {
+										id:item.id,
+										pid:item.pid,
+										title:b_click.parentNode.lastElementChild.value
+									}
+								}else {
+									return item;
+								}
+							});
+                        }
+						localData.files = arr1;
+						localStorage.setItem('localData',JSON.stringify(localData));
+                        localData = JSON.parse(localStorage.getItem('localData'));
+						createList(getSelf(topId),1);
+						createListSmall(getSelf(topId),1);
+						scroll();
+						createFolder(getChild(now.dataset.id));
+						openList(now.dataset.id);
+					}
+				}
+			}
+		});
 
-	n_view.addEventListener('click',function (e) {
-		let b_click = '';
-		if (e.target.tagName == 'A') {
-			b_click = e.target;
+		//这是新建文件夹功能（上面的新建文件夹按钮）
+		newfolder.addEventListener('click',function () {
+			function newName(pid) {
+				let names = getChild(pid);
+				names = names.map(item=>item.title);
+				names = names.filter(function (item) {
+					if (item == '新建文件夹') {
+						return true;
+					}
+					let num = item.substring(6,item.length-1);
+					if (!isNaN(num)) {
+						return true;
+					}
+					return false;
+				});
+				names.sort((n1,n2)=>{
+					return parseInt(n1.substr(5)) -  parseInt(n2.substr(5))
+				});
+				if(names[0] != '新建文件夹') {
+					return '新建文件夹';
+				}
+				for(let i = 1;i < names.length; i++){
+					if(parseInt(names[i].substr(6)) != i+1){
+						return "新建文件夹(" +(i+1)+")";
+					}
+				}
+				return "新建文件夹(" +(names.length+1)+")";
+			}
+			let now = document.querySelector('.c_nav');
+			localData.files.push(
+				{
+					id:Date.now(),
+					pid:now.dataset.id,
+					title:newName(now.dataset.id)
+				}
+			);
+			localStorage.setItem('localData',JSON.stringify(localData));
+			localData = JSON.parse(localStorage.getItem('localData'));
+			createList(getSelf(topId),1);
+			createListSmall(getSelf(topId),1);
+			scroll();
+			createNav(now.dataset.id);
+			createFolder(getChild(now.dataset.id));
+			checkAll.classList.remove('active');
+			openList(localData.files[localData.files.length - 1].pid);
+		});
+
+		//这是删除文件夹功能（上面的删除按钮）
+		remove.addEventListener('click',function () {
+			let del = f_view.querySelectorAll('.active');
+			let now = document.querySelector('.c_nav');
+			let del_arr = [];
+			del.forEach(function (item) {
+				del_arr.push(parseInt(item.dataset.id));
+				if (getChild(item.dataset.id).length > 0) {
+					getChild(item.dataset.id).forEach(function (child) {
+						del_arr.push(child.id);
+						if (getChild(child.id).length > 0) {
+							getChild(child.id).forEach(function (grandchild) {
+								del_arr.push(grandchild.id);
+							})
+						}
+					})
+				}
+			});
+			removeObject(localData.files,del_arr);
+			localData.files = arr1;
+			localStorage.setItem('localData',JSON.stringify(localData));
+			localData = JSON.parse(localStorage.getItem('localData'));
+			createList(getSelf(topId),1);
+			createListSmall(getSelf(topId),1);
+			scroll();
+			createNav(now.dataset.id);
+			createFolder(getChild(now.dataset.id));
+			checkAll.classList.remove('active');
+			openList(now.dataset.id);
+		});
+
+		//这是全选与全不选功能
+		checkAll.addEventListener('click',function () {
+			if (!checkAll.classList.contains('active')) {
+				let allFiles = f_view.querySelectorAll('.file');
+				allFiles.forEach(function (item) {
+					item.classList.add('active');
+				});
+				this.classList.add('active')
+			}else {
+				let allFiles = f_view.querySelectorAll('.file');
+				allFiles.forEach(function (item) {
+					item.classList.remove('active');
+				});
+				this.classList.remove('active')
+			}
+
+		});
+
+		//这是文件夹的右键菜单功能
+		f_view.addEventListener('contextmenu',function (e) {
+			e.preventDefault();
+			if (e.target.classList.contains('file')|| e.target.className == 'folder'|| e.target.className == 'check'|| e.target.className == 'f_name') {
+				f_menu.style.display = 'block';
+				f_menu.style.left = e.clientX + 'px';
+				f_menu.style.top = e.clientY + 'px';
+				let b_click = '';
+				if (e.target.classList.contains('file')) {
+					b_click = e.target;
+				}else if (e.target.className == 'folder') {
+					b_click = e.target.parentNode;
+				}else if (e.target.tagName == 'I') {
+					b_click = e.target.parentNode;
+				}else if (e.target.className == 'f_name') {
+					b_click = e.target.parentNode;
+				}
+				f_menu.firstElementChild.onclick = function () {
+					let now = document.querySelector('.c_nav');
+					b_click.lastElementChild.previousElementSibling.style.display = 'none';
+					b_click.lastElementChild.style.display = 'block';
+					b_click.lastElementChild.value = b_click.lastElementChild.previousElementSibling.innerHTML;
+					b_click.lastElementChild.select();
+					b_click.lastElementChild.onblur = function () {
+						b_click.lastElementChild.previousElementSibling.style.display = 'block';
+						b_click.lastElementChild.style.display = 'none';
+						if (b_click.lastElementChild.previousElementSibling.innerHTML != b_click.lastElementChild.value) {
+							if (!b_click.lastElementChild.value) {
+								return ;
+                            }else {
+								b_click.lastElementChild.previousElementSibling.innerHTML = b_click.lastElementChild.value;
+								let clickId = b_click.dataset.id;
+								arr1 = localData.files.map(function (item) {
+									if (item.id == clickId) {
+										return {
+											id:item.id,
+											pid:item.pid,
+											title:b_click.lastElementChild.value
+										}
+									}else {
+										return item;
+									}
+								});
+                            }
+							localData.files = arr1;
+							localStorage.setItem('localData',JSON.stringify(localData));
+							localData = JSON.parse(localStorage.getItem('localData'));
+							createList(getSelf(topId),1);
+							createNav(topId);
+							createFolder(getChild(topId));
+							openList(b_click.dataset.id);
+						}
+					};
+					f_menu.style.display = 'none';
+				};
+				f_menu.lastElementChild.onclick = function () {
+					let del = f_view.querySelectorAll('.active');
+					let now = document.querySelector('.c_nav');
+					if (del.length > 0) {
+						let del_arr = [];
+						del.forEach(function (item) {
+							del_arr.push(parseInt(item.dataset.id));
+							if (getChild(item.dataset.id).length > 0) {
+								getChild(item.dataset.id).forEach(function (child) {
+									del_arr.push(child.id);
+									if (getChild(child.id).length > 0) {
+										getChild(child.id).forEach(function (grandchild) {
+											del_arr.push(grandchild.id);
+										})
+									}
+								})
+							}
+						});
+						removeObject(localData.files,del_arr);
+						localData.files = arr1;
+						localStorage.setItem('localData',JSON.stringify(localData));
+						localData = JSON.parse(localStorage.getItem('localData'))
+					}else {
+						removeObject(localData.files,b_click.dataset.id.split());
+						localData.files = arr1;
+						localStorage.setItem('localData',JSON.stringify(localData));
+						localData = JSON.parse(localStorage.getItem('localData'))
+					}
+					createList(getSelf(topId),1);
+					createNav(now.dataset.id);
+					createFolder(getChild(now.dataset.id));
+					openList(now.dataset.id);
+					checkAll.classList.remove('active');
+					f_menu.style.display = 'none';
+				}
+			}
+			f_view.addEventListener('click',function (e) {
+				f_menu.style.display = 'none';
+			});
+		});
+
+		//这是文件夹的右键菜单上阻止的右键菜单
+		f_menu.addEventListener('contextmenu',function (e) {
+			e.preventDefault();
+		});
+
+		//这是框选功能
+		f_view.addEventListener('mousedown',function (e) {
+            if (e.target == f_view || e.target == f_empty) {
+				let startX = e.clientX - f_view.getBoundingClientRect().left;
+				let startY = e.clientY - f_view.getBoundingClientRect().top;
+				let minL = f_view.getBoundingClientRect().left - f_view.offsetLeft;
+				let maxL = minL + f_view.clientWidth;
+				let minT = f_view.getBoundingClientRect().top - f_view.offsetTop;
+				let maxT = minT + f_view.clientHeight;
+				let border = document.createElement('div');
+				border.classList.add('border');
+				f_view.appendChild(border);
+				document.addEventListener('mousemove',change);
+				document.addEventListener('mouseup',up);
+				function change(e) {
+					e.preventDefault();
+					let nowClient = {
+						x: e.clientX - f_view.getBoundingClientRect().left,
+						y: e.clientY - f_view.getBoundingClientRect().top
+					};
+					if (nowClient.x < minL) {
+						nowClient.x = minL;
+					}else if (nowClient.x > maxL) {
+						nowClient.x = maxL;
+					}
+					if (nowClient.y < minT) {
+						nowClient.y = minT;
+					}else if (nowClient.y > maxT) {
+						nowClient.y = maxT;
+					}
+					border.style.cssText = 'width:' + (Math.abs(nowClient.x - startX)) + 'px;height:' + Math.abs((nowClient.y - startY)) + 'px';
+					border.style.cssText += 'left:' + Math.min(nowClient.x,startX) + 'px;';
+					border.style.cssText += 'top:' + Math.min(nowClient.y,startY) + 'px;';
+					let files = f_view.querySelectorAll('.file');
+					let borderRect = border.getBoundingClientRect();
+					files.forEach(function (item) {
+						if (borderRect.left > item.getBoundingClientRect().right||
+							borderRect.right < item.getBoundingClientRect().left||
+							borderRect.top > item.getBoundingClientRect().bottom||
+							borderRect.bottom < item.getBoundingClientRect().top
+						) {
+							item.classList.remove('active');
+							checkAll.classList.remove('active');
+						}else {
+							item.classList.add('active');
+							let files = document.querySelectorAll('.file');
+							for (var i = 0; i < files.length; i++) {
+								if (!files[i].classList.contains('active')) {
+									checkAll.classList.remove('active');
+									return false;
+								}else {
+									checkAll.classList.add('active');
+								}
+							}
+						}
+					})
+				}
+				function up(e) {
+					document.removeEventListener('mousemove',change);
+					document.removeEventListener('mouseup',up);
+					border.remove();
+				}
+            }
+		});
+
+		//这是重命名功能（上面的重命名按钮）
+		rename.onclick = function (e) {
+			let filesName = f_view.querySelectorAll('.active .f_name');
+			filesName.forEach(function (item) {
+				item.parentElement.classList.remove('active');
+			});
+			if (filesName.length > 0) {
+				filesName[0].parentElement.classList.add('active');
+				filesName[0].style.display = 'none';
+				filesName[0].nextElementSibling.style.display = 'block';
+				filesName[0].nextElementSibling.value = filesName[0].innerHTML;
+				filesName[0].nextElementSibling.select();
+				filesName[0].nextElementSibling.onblur = function () {
+					filesName[0].style.display = 'block';
+					filesName[0].nextElementSibling.style.display = 'none';
+					if (filesName[0].innerHTML != filesName[0].nextElementSibling.value) {
+						if (!filesName[0].nextElementSibling.value) {
+							return ;
+                        }else {
+							filesName[0].innerHTML = filesName[0].nextElementSibling.value;
+							let clickId = filesName[0].parentNode.dataset.id;
+							let now = document.querySelector('.c_nav');
+							arr1 = localData.files.map(function (item) {
+								if (item.id == clickId) {
+									return {
+										id:item.id,
+										pid:item.pid,
+										title:filesName[0].nextElementSibling.value
+									}
+								}else {
+									return item;
+								}
+							});
+                        }
+						localData.files = arr1;
+						localStorage.setItem('localData',JSON.stringify(localData));
+						localData = JSON.parse(localStorage.getItem('localData'));
+						createList(getSelf(topId),1);
+						createFolder(getChild(now.dataset.id));
+						createListSmall(getSelf(topId),1);
+						scroll();
+						openList(now.dataset.id);
+					}
+				}
+			}
+		};
+
+		//这是文件拖拽功能
+		f_view.addEventListener('mousedown',function (e) {
+			if (e.target.classList.contains('file')|| e.target.className == 'folder'|| e.target.className == 'check'|| e.target.className == 'f_name') {
+				let b_click = '';
+				if (e.target.classList.contains('file')) {
+					b_click = e.target;
+				} else if (e.target.className == 'folder') {
+					b_click = e.target.parentNode;
+				} else if (e.target.tagName == 'I') {
+					b_click = e.target.parentNode;
+				} else if (e.target.className == 'f_name') {
+					b_click = e.target.parentNode;
+				}
+				let files = f_view.querySelectorAll('.active');
+				let move_arr = [];
+				if (files.length > 0) {
+					files.forEach(function (item) {
+						move_arr.push(parseInt(item.dataset.id));
+					});
+				} else {
+					move_arr.push(getSelf(b_click.dataset.id)[0].id);
+				}
+				document.addEventListener('mouseup',drag);
+				function drag(e) {
+					let target = null;
+					let menus = m_view.querySelectorAll('div');
+					menus.forEach(function (item) {
+						if(!(item.getBoundingClientRect().right < e.clientX||                        item.getBoundingClientRect().left > e.clientX||                         item.getBoundingClientRect().bottom < e.clientY||                       item.getBoundingClientRect().top > e.clientY)
+						) {
+							target = item;
+						}
+					});
+					if (!target) {
+						move_arr = [];
+						return false;
+                    }
+					if(target) {
+						let e_arr = [];
+						move_arr = move_arr.map(function (item) {
+							return getSelf(item)[0]
+						});
+						move_arr.forEach(function (item) {
+							let children = [];
+							move_arr.forEach(function (son) {
+								children.push(parseInt(son.id));
+								if (getChild(son.id).length > 0) {
+									getChild(son.id).forEach(function (child) {
+										children.push(child.id);
+										if (getChild(child.id).length > 0) {
+											getChild(child.id).forEach(function (grandchild) {
+												children.push(grandchild.id);
+											})
+										}
+									})
+								}
+							});
+							for (let c = 0; c < children.length; c++) {
+								if (target.dataset.id == children[c]) {
+									alert('不能放入自己');
+									return false;
+								}
+							}
+							item.pid = target.dataset.id;
+							e_arr.push(item);
+						});
+						arr1 = localData.files.filter(function (item) {
+							for (var k = 0; k < e_arr.length; k++) {
+								if (item.id == e_arr[k].id) {
+									return false
+								}
+							}
+							return item;
+						});
+						e_arr.forEach(function (gg) {
+							arr1.push(gg)
+						});
+						localData.files = arr1;
+						let now = document.querySelector('.c_nav');
+						localStorage.setItem('localData',JSON.stringify(localData));
+						localData = JSON.parse(localStorage.getItem('localData'));
+						createList(getSelf(topId),1);
+						createFolder(getChild(now.dataset.id));
+						openList(target.dataset.id);
+						move_arr = [];
+						checkAll.classList.remove('active');
+						document.removeEventListener('mouseup',drag);
+					}
+				}
+			}
+        });
+
+        //这是弹窗列表的功能
+		show.addEventListener('click',function (e) {
+			checkAll.classList.remove('active');
+			let b_click = '';
+			let divAll = document.querySelectorAll('.show div');
+			if (e.target.dataset.w == 'ok') {
+				b_click = e.target;
+			}else if (e.target.tagName == 'SPAN') {
+				b_click = e.target.parentNode;
+			}else if (e.target.tagName == 'LI') {
+				b_click = e.target.firstElementChild;
+			}
+			if (b_click.dataset) {
+				let id = b_click.dataset.id;
+				for (var a = 0; a < divAll.length; a++) {
+					divAll[a].classList.remove('active');
+				}
+				b_click.classList.add('active');
+				if (e.target.classList.contains('.sureBtn')) {
+					console.log(1)
+                }
+			}
+		});
+		cancelBtn.onclick = closeWindow;
+		closeBtn.onclick = closeWindow;
+		function closeWindow() {
+			tan.style.display = 'none';
 		}
-		if (b_click.dataset) {
-			let id = b_click.dataset.id;
-			createNav(id);
-			createFolder(getChild(id));
-        }
-	});
+		move.onclick = function () {
+			tan.style.display = 'block';
+			let navScroll = show.querySelector('.navScroll');
+			let navBar = show.querySelector('.navBar');
+			let ul = show.querySelector('ul');
+			let navHScale = parseInt(show.clientHeight) / parseInt(ul.offsetHeight);
+			let navHeight = parseInt(navBar.clientHeight) * navHScale;
+			let scrollScale = (parseInt(ul.offsetHeight) - parseInt(show.clientHeight)) / (parseInt(navBar.clientHeight) - navHeight);
+			navScroll.style.cssText = 'height:' + navHeight + 'px';
+			navScroll.onmousedown = function (e) {
+				let startClientY = e.clientY;
+				let startTop = parseInt(getComputedStyle(navScroll)['top']);
+				let minT = 0;
+				let maxT = navBar.clientHeight - navScroll.offsetHeight;
+				document.onmousemove = function (e) {
+					let nowClientY = e.clientY;
+					let disY = nowClientY - startClientY;
+					let nowP = disY + startTop;
+					if (nowP > maxT) {
+						navScroll.style.top = maxT + 'px';
+						ul.style.transform = 'translateY(' + -maxT * scrollScale + 'px)'
+					}else if (nowP < minT) {
+						navScroll.style.top = minT + 'px';
+						ul.style.transform = 'translateY(' + -minT * scrollScale + 'px)'
+					}else {
+						navScroll.style.top = nowP + 'px';
+						ul.style.transform = 'translateY(' + -nowP * scrollScale + 'px)'
+					}
+					e.preventDefault();
+				};
+				document.onmouseup = function () {
+					document.onmousemove = document.onmouseup = null;
+				}
 
-	f_view.addEventListener('dblclick',function (e) {
-		let b_click = '';
-		if (e.target.className == 'file') {
-			b_click = e.target;
-		}else if (e.target.className == 'folder') {
-			b_click = e.target.parentNode;
-        }
-		if (b_click.dataset) {
-			let id = b_click.dataset.id;
-			createNav(id);
-			createFolder(getChild(id));
-        }
-	});
-
-
-	/*f_view.addEventListener('click',function (e) {
-		let b_click = '';
-		if (e.target.className == 'file') {
-			b_click = e.target;
-		}else if (e.target.className == 'folder') {
-			b_click = e.target.parentNode;
-		}else if (e.target.tagName == 'I') {
-			b_click = e.target.parentNode;
-        }
-        b_click.classList.toggle('active');
-
-	});*/
-
-
-	newfolder.addEventListener('click',function () {
-		let now = document.querySelector('.c_nav');
-        data.files.push(
-			{
-				id:Math.round(Math.random()*99999),
-				pid:now.dataset.id,
-				title:"新建文件夹"
+			};
+		};
+		popUp.addEventListener('click',function (e) {
+			let files = f_view.querySelectorAll('.active');
+			let move_arr = [];
+			if (files.length > 0) {
+				files.forEach(function (item) {
+					move_arr.push(parseInt(item.dataset.id));
+				});
 			}
-        );
-        console.log(data.files);
-		createList(getSelf(topId));
-		createNav(topId);
-		createFolder(getChild(topId));
-	})
-
+			let target = null;
+			let menus = show.querySelectorAll('.kai');
+			menus.forEach((item)=>{
+				if (item.classList.contains('active')) {
+					target = item;
+                }
+            });
+			if (e.target.classList.contains('sureBtn')) {
+				if(target) {
+					let e_arr = [];
+					move_arr = move_arr.map(function (item) {
+						return getSelf(item)[0]
+					});
+					move_arr.forEach(function (item) {
+						let children = [];
+						move_arr.forEach(function (son) {
+							children.push(parseInt(son.id));
+							if (getChild(son.id).length > 0) {
+								getChild(son.id).forEach(function (child) {
+									children.push(child.id);
+									if (getChild(child.id).length > 0) {
+										getChild(child.id).forEach(function (grandchild) {
+											children.push(grandchild.id);
+										})
+									}
+								})
+							}
+						});
+						for (let c = 0; c < children.length; c++) {
+							if (target.dataset.id == children[c]) {
+								alert('不能放入自己');
+								return false;
+							}
+						}
+						item.pid = target.dataset.id;
+						e_arr.push(item);
+					});
+					arr1 = localData.files.filter(function (item) {
+						for (var k = 0; k < e_arr.length; k++) {
+							if (item.id == e_arr[k].id) {
+								return false
+							}
+						}
+						return item;
+					});
+					e_arr.forEach(function (gg) {
+						arr1.push(gg)
+					});
+					localData.files = arr1;
+					let now = document.querySelector('.c_nav');
+					localStorage.setItem('localData',JSON.stringify(localData));
+					localData = JSON.parse(localStorage.getItem('localData'));
+					createList(getSelf(topId),1);
+					createFolder(getChild(now.dataset.id));
+					openList(target.dataset.id);
+					move_arr = [];
+					checkAll.classList.remove('active');
+				}
+				closeWindow();
+            }
+		})
+	})();
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 </body>
 </html>
