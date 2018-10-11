@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css">
+
+</head>
+<body>
+
+<div class="box">
+    <header class="clear">
+        <div class="l_header fl">
+            <img src="images/logo.png">
+            <span>妙味云盘</span>
+        </div>
+        <div class="r_header fr">
+            <span class="icon"></span>
+            <i class="fa fa-chevron-down"></i>
+            <span class="shu"></span>
+            <i class="fa fa-gear"></i>
+        </div>
+    </header>
+    <nav class="tools">
+        <div class="fl flex-r">
+            <div>
+                <i class="fa fa-cloud-download"></i>
+                <span>下载</span>
+            </div>
+            <div>
+                <i class="fa fa-share-alt"></i>
+                <span>分享</span>
+            </div>
+            <div>
+                <i class="fa fa-arrows"></i>
+                <span>移动到</span>
+            </div>
+            <div>
+                <i class="fa fa-file-excel-o"></i>
+                <span>重命名</span>
+            </div>
+            <div>
+                <i class="fa fa-trash-o"></i>
+                <span>删除</span>
+            </div>
+            <div>
+                <i class="fa fa-folder-open-o"></i>
+                <span>新建文件夹</span>
+            </div>
+            <div>
+                <i class="fa fa-refresh"></i>
+            </div>
+        </div>
+        <div class="fr">
+            <div>
+                <i class="sort"></i>
+                <i class="fa fa-chevron-down"></i>
+            </div>
+            <div>
+                <i class="icon"></i>
+            </div>
+        </div>
+    </nav>
+    <div class="body clear">
+        <div class="left fl">
+            <!--<ul>
+                <li class="close">
+                    <span class="f_arrow"></span>
+                    <span class="s_folder"></span>
+                    <span class="text">微云</span>
+                </li>
+            </ul>-->
+        </div>
+        <div class="right fl">
+            <div class="top clear">
+                <div class="checkAll"></div>
+                <nav class="nav_bar fl">
+                    <!--<a href="javascript:;" class="p_nav">微云</a>
+                    <a href="javascript:;" class="p_nav">微云</a>
+                    <a href="javascript:;" class="p_nav">微云</a>
+                    <span class="c_nav">JS课程</span>-->
+                </nav>
+            </div>
+            <div class="bottom clear">
+               <!-- <div class="file">
+                    <i class="check"></i>
+                    <div class="folder"></div>
+                    <span class="f_name">JS基础课程</span>
+                </div>-->
+            </div>
+            <div class="empty">
+                <img src="images/cover-bg.png" height="241" width="290">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="data/data.js"></script>
+
+
+<script>
+    let m_view = document.querySelector('.left');
+    let n_view = document.querySelector('.nav_bar');
+	let f_view = document.querySelector('.bottom');
+	let f_empty = document.querySelector('.empty');
+	let download = document.querySelector('.tools .flex-r div:nth-of-type(1)');
+	let share = document.querySelector('.tools .flex-r div:nth-of-type(2)');
+	let move = document.querySelector('.tools .flex-r div:nth-of-type(3)');
+	let rename = document.querySelector('.tools .flex-r div:nth-of-type(4)');
+	let remove = document.querySelector('.tools .flex-r div:nth-of-type(5)');
+	let newfolder = document.querySelector('.tools .flex-r div:nth-of-type(6)');
+
+
+
+
+
+//---------------------------------数据-----------------------------------
+
+
+    let topId = 0;
+    let topPid = -1;
+    let nowId = 0;
+
+    function getChild(id) {
+        let child = data.files.filter(function (item) {
+            return item.pid == id;
+		})
+        return child;
+	}
+
+    function getSelf(id) {
+		let self = data.files.filter(function (item) {
+			return item.id == id;
+		})
+		return self;
+	}
+
+
+
+	function getParent(id) {
+    	let self = getSelf(getSelf(id)[0].pid)[0];
+    	let parent = [];
+
+		while(self){
+			parent.push(self);
+			self = getSelf(self.pid)[0];
+        }
+
+        return parent.reverse();
+	}
+
+
+//----------------------------------生成---------------------------------
+
+
+    function createList(child) {
+        let l_str = '';
+        if (child.length > 0) {
+			child.forEach(function (item,index) {
+				l_str += `
+                <ul>
+                    <li class="close" data-id = "${item.id}">
+                        <span class="f_arrow"></span>
+                        <span class="s_folder"></span>
+                        <span class="text">${item.title}</span>
+                    </li>
+                    ${createList(getChild(item.id))}
+                </ul>
+            `;
+			})
+        }
+        return m_view.innerHTML = l_str;
+	}
+
+	createList(getSelf(topId));
+
+
+    function createNav(id) {
+        let n_str = '';
+        getParent(id).forEach(function (item) {
+            n_str += `
+                <a href="javascript:;" class="p_nav" data-id = "${item.id}">${item.title}</a>
+            `;
+		});
+        n_str += `
+            <span class="c_nav"data-id = "${id}">${getSelf(id)[0].title}</span>
+        `;
+        n_view.innerHTML = n_str;
+	}
+
+
+	createNav(topId);
+
+
+    function createFolder(child) {
+        let f_str = '';
+        if (child.length > 0) {
+			child.forEach(function (item) {
+				f_str += `
+            <div class="file" data-id = "${item.id}">
+                <i class="check"></i>
+                <div class="folder"></div>
+                <span class="f_name">${item.title}</span>
+            </div>
+        `;
+            f_view.style.display = 'block';
+            f_empty.style.display = 'none';
+			})
+        }else {
+        	f_view.style.display = 'none';
+			return f_empty.style.display = 'block';
+        }
+		f_view.innerHTML = f_str;
+	}
+
+	createFolder(getChild(topId))
+
+//-------------------------------事件-------------------------------------
+
+    m_view.addEventListener('click',function (e) {
+    	let b_click = '';
+        if (e.target.tagName == 'LI') {
+			b_click = e.target;
+        }else if (e.target.tagName == 'SPAN') {
+			b_click = e.target.parentNode;
+        }
+        if (b_click.dataset) {
+			let id = b_click.dataset.id;
+			createNav(id);
+			createFolder(getChild(id));
+			if (b_click.classList.contains('open')) {
+				let parent = b_click.parentNode;
+				let children = parent.children;
+				let ul = parent.querySelectorAll('ul');
+				let li = parent.querySelectorAll('li');
+				for (var i = 1; i < children.length; i++) {
+					children[i].style.display = 'none';
+					for (var a = 0; a < ul.length; a++) {
+						ul[a].style.display = 'none';
+					}
+					for (var b = 0; b < ul.length; b++) {
+						li[b].classList.remove('open');
+						li[b].classList.add('close');
+					}
+				}
+			}else if (b_click.classList.contains('close')) {
+				b_click.classList.remove('close');
+				b_click.classList.add('open');
+				let parent = b_click.parentNode;
+				let children = parent.children;
+				for (var i = 1; i < children.length; i++) {
+					children[i].style.display = 'block';
+				}
+			}
+        }
+	});
+
+
+	n_view.addEventListener('click',function (e) {
+		let b_click = '';
+		if (e.target.tagName == 'A') {
+			b_click = e.target;
+		}
+		if (b_click.dataset) {
+			let id = b_click.dataset.id;
+			createNav(id);
+			createFolder(getChild(id));
+        }
+	});
+
+	f_view.addEventListener('dblclick',function (e) {
+		let b_click = '';
+		if (e.target.className == 'file') {
+			b_click = e.target;
+		}else if (e.target.className == 'folder') {
+			b_click = e.target.parentNode;
+        }
+		if (b_click.dataset) {
+			let id = b_click.dataset.id;
+			createNav(id);
+			createFolder(getChild(id));
+        }
+	});
+
+
+	/*f_view.addEventListener('click',function (e) {
+		let b_click = '';
+		if (e.target.className == 'file') {
+			b_click = e.target;
+		}else if (e.target.className == 'folder') {
+			b_click = e.target.parentNode;
+		}else if (e.target.tagName == 'I') {
+			b_click = e.target.parentNode;
+        }
+        b_click.classList.toggle('active');
+
+	});*/
+
+
+	newfolder.addEventListener('click',function () {
+		let now = document.querySelector('.c_nav');
+        data.files.push(
+			{
+				id:Math.round(Math.random()*99999),
+				pid:now.dataset.id,
+				title:"新建文件夹"
+			}
+        );
+        console.log(data.files);
+		createList(getSelf(topId));
+		createNav(topId);
+		createFolder(getChild(topId));
+	})
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
